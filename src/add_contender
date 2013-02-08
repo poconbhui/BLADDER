@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+ladder="$1"
+shift
+
+contender="$@"
+
+#Ensure contender doesn't already exist
+grep -q "^[[:digit:]]*\. $contender$" "$ladder" &&
+    echo "$contender" IS ALREADY ON THE LADDER  &&
+    exit
+
+#Find last number on ladder
+last_number=$(
+    cat $ladder | sort -n | tail -n 1 | sed 's/\([[:digit:]]*\)\..*/\1/'
+)
+(( contender_num=$last_number+1 ))
+
+echo "$contender_num". "$contender" >> $ladder

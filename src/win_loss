@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+ladder="$1"
+shift
+
+input="$@"
+
+die() {
+    echo "$@"
+    exit 1
+}
+
+
+winner_name=$(echo "$input" | sed 's/\(.*\) beat.*/\1/')
+loser_name=$(echo "$input" | sed 's/.* beat \(.*\)/\1/')
+
+#Verify names are actually on the ladder and get data
+winner_string=$(grep "^[[:digit:]]*\. $winner_name$" $ladder)
+loser_string=$( grep "^[[:digit:]]*\. $loser_name$" $ladder)
+
+test -n "$winner_string" || die NO SUCH PLAYER \""$winner_name"\"
+test -n "$loser_string"  || die NO SUCH PLAYER \""$loser_name"\"
+
+winner_num=$(echo "$winner_string" | sed 's/\([[:digit:]]\)\..*/\1/')
+loser_num=$( echo "$loser_string"  | sed 's/\([[:digit:]]\)\..*/\1/')
+
+#Ensure it was a legal game
+#Only allow games directly from above or from below
+(( diff=$winner_num-$loser_num ))
+test "$diff" != "1" && test "$diff" != "-1" && die THIS WAS AN ILLEGAL GAME!
+
+
+#If the winner is overtaking, update the ladder accordingly
+if (( $winner_num > $loser_num )); then
+    echo "$winner_name" just overtook "$loser_name" on the ladder!
+
+    sed -i s/"$winner_string"/"$loser_num"'. '"$winner_name"/ $ladder
+    sed -i s/"$loser_string"/"$winner_num"'. '"$loser_name"/ $ladder
+fi

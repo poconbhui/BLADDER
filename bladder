@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+command="$@"
+ladder=ladder.dat
+touch "$ladder"
+
+root=.
+
+case "$1" in
+    "add")
+        shift
+        echo ADDING CONTENDER "$@"
+        echo
+        $root/src/add_contender "$ladder" "$@"
+    ;;
+    "show")
+        if [ "$2" == "ladder" ]; then
+            echo BLADDER SHOWING LADDER
+            echo
+            $root/src/display_ladder "$ladder"
+        else
+            echo show what?
+        fi
+    ;;
+    *)
+        if echo "$@" | grep -q "beat"; then
+            echo REGISTERING BEATING
+            echo
+            $root/src/win_loss "$ladder" "$@"
+        else
+            echo I DON\'T KNOW HOW TO \""$@"\"
+        fi
+    ;;
+esac

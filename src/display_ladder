@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+ladder="$1"
+shift
+
+cat $ladder | sort -n
