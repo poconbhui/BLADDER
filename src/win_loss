@@ -11,8 +11,8 @@ die() {
 }
 
 
-winner_name=$(echo "$input" | sed 's/\(.*\) beat.*/\1/')
-loser_name=$(echo "$input" | sed 's/.* beat \(.*\)/\1/')
+winner_name=$(echo "$input" | sed 's/\(.*\) beat.*/\L\1/')
+loser_name=$(echo "$input" | sed 's/.* beat \(.*\)/\L\1/')
 
 #Verify names are actually on the ladder and get data
 winner_string=$(grep "^[[:digit:]]*\. $winner_name$" $ladder)
