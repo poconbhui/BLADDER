@@ -3,11 +3,11 @@
 ladder="$1"
 shift
 
-contender="$@"
+contender=$(echo "$@" | sed 's/\([a-zA-Z]\)\([a-zA-Z]*\)/\U\1\L\2/')
 
 #Ensure contender doesn't already exist
 grep -q "^[[:digit:]]*\. $contender$" "$ladder" &&
-    echo "$contender" IS ALREADY ON THE LADDER  &&
+    echo $(echo $contender | sed 's/\(.*\)/\U\1/') IS ALREADY ON THE LADDER  &&
     exit
 
 #Find last number on ladder
